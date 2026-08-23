@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launchpad Studio — Professional websites, honest prices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF9F6;
+    --ink:#1A1D29;
+    --ember:#E8542E;
+    --forest:#2F5233;
+    --stone:#D4D0C4;
+    --paper-dim:#F0EEE8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  /* NAV */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,249,246,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--stone);
+  }
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;}
+  .logo{font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;}
+  .logo span{color:var(--ember);}
+  .navlinks{display:flex;gap:32px;font-size:0.9rem;font-weight:500;}
+  .navlinks a{opacity:0.75;transition:opacity .2s;}
+  .navlinks a:hover{opacity:1;}
+  .nav-cta{
+    background:var(--ink);color:var(--paper);
+    padding:10px 20px;border-radius:4px;
+    font-size:0.85rem;font-weight:600;
+  }
+  @media(max-width:720px){.navlinks{display:none;}}
+
+  /* HERO */
+  .hero{
+    position:relative;
+    padding:96px 0 80px;
+    background:var(--ink);
+    color:var(--paper);
+    overflow:hidden;
+  }
+  .phantom-canvas{
+    position:absolute;inset:0;
+    z-index:0;
+    opacity:0.55;
+  }
+  .hero-inner{position:relative;z-index:2;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:0.8rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--ember);
+    margin-bottom:24px;
+  }
+  .eyebrow::before{content:'';width:6px;height:6px;background:var(--ember);border-radius:50%;}
+  .hero h1{
+    font-size:clamp(2.4rem, 5.5vw, 4.2rem);
+    line-height:1.05;
+    max-width:820px;
+    margin-bottom:24px;
+  }
+  .hero h1 em{font-style:italic;color:var(--ember);}
+  .hero p.lead{
+    font-size:1.15rem;
+    max-width:560px;
+    opacity:0.8;
+    margin-bottom:36px;
+  }
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:64px;}
+  .btn-primary{
+    background:var(--ember);color:var(--paper);
+    padding:16px 28px;border-radius:4px;
+    font-weight:600;font-size:0.95rem;
+    display:inline-block;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,84,46,0.35);}
+  .btn-ghost{
+    border:1px solid rgba(250,249,246,0.3);
+    padding:16px 28px;border-radius:4px;
+    font-weight:600;font-size:0.95rem;
+    display:inline-block;
+  }
+
+  /* PROOF CARD — search result mock */
+  .proof-card{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:8px;
+    padding:24px 28px;
+    max-width:600px;
+    box-shadow:0 24px 64px rgba(0,0,0,0.35);
+  }
+  .proof-label{
+    font-size:0.72rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
+    color:var(--forest);margin-bottom:14px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .proof-label::before{content:'✓';background:var(--forest);color:var(--paper);width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;}
+  .search-result{
+    border:1px solid var(--stone);
+    border-radius:6px;
+    padding:14px 16px;
+    margin-bottom:8px;
+  }
+  .search-result.rank1{border-color:var(--forest);background:#F4F8F4;position:relative;}
+  .rank-badge{
+    position:absolute;top:-9px;left:14px;
+    background:var(--forest);color:var(--paper);
+    font-size:0.65rem;font-weight:700;
+    padding:2px 8px;border-radius:3px;
+    letter-spacing:0.03em;
+  }
+  .sr-url{font-size:0.78rem;color:var(--forest);margin-bottom:2px;}
+  .sr-title{font-size:1rem;font-weight:600;color:#1a0dab;margin-bottom:2px;}
+  .sr-desc{font-size:0.82rem;opacity:0.7;}
+  .proof-footnote{font-size:0.78rem;opacity:0.6;margin-top:12px;}
+
+  /* QUOTE FORM */
+  #quoteForm{display:flex;flex-direction:column;gap:10px;}
+  .form-row{display:flex;gap:10px;}
+  #quoteForm input,#quoteForm select,#quoteForm textarea{
+    width:100%;
+    border:1px solid var(--stone);
+    border-radius:5px;
+    padding:11px 12px;
+    font-family:'Inter',sans-serif;
+    font-size:0.9rem;
+    color:var(--ink);
+    background:var(--paper);
+  }
+  #quoteForm input:focus,#quoteForm select:focus,#quoteForm textarea:focus{
+    outline:2px solid var(--ember);
+    outline-offset:1px;
+  }
+  #quoteForm textarea{resize:vertical;}
+  .form-submit{
+    background:var(--ember);color:var(--paper);
+    border:none;border-radius:5px;
+    padding:13px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;font-size:0.92rem;
+    cursor:pointer;
+    transition:transform .2s;
+  }
+  .form-submit:hover{transform:translateY(-1px);}
+  .form-submit:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+  .form-status{font-size:0.85rem;text-align:center;min-height:1.2em;}
+  .form-status.success{color:var(--forest);font-weight:600;}
+  .form-status.error{color:var(--ember);font-weight:600;}
+
+  /* SECTION generic */
+  section{padding:88px 0;}
+  .section-head{max-width:640px;margin-bottom:56px;}
+  .section-head .eyebrow{color:var(--ember);}
+  .section-head h2{font-size:clamp(1.8rem,3.5vw,2.6rem);}
+  .section-head p{opacity:0.65;font-size:1.05rem;margin-top:12px;}
+
+  /* PRICING */
+  .pricing-grid{
+    display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:20px;
+  }
+  @media(max-width:900px){.pricing-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:560px){.pricing-grid{grid-template-columns:1fr;}}
+  .plan{
+    border:1px solid var(--stone);
+    border-radius:8px;
+    padding:32px 24px;
+    background:var(--paper);
+    display:flex;flex-direction:column;
+  }
+  .plan.featured{
+    border-color:var(--ember);
+    background:var(--ink);
+    color:var(--paper);
+    transform:translateY(-8px);
+    box-shadow:0 20px 48px rgba(26,29,41,0.18);
+  }
+  .plan-name{font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;opacity:0.6;margin-bottom:12px;}
+  .plan-price{font-family:'Fraunces',serif;font-size:2.1rem;font-weight:600;margin-bottom:4px;}
+  .plan-price span{font-size:0.9rem;font-weight:500;opacity:0.6;}
+  .plan-desc{font-size:0.85rem;opacity:0.65;margin-bottom:24px;}
+  .plan-features{list-style:none;font-size:0.88rem;flex-grow:1;margin-bottom:24px;}
+  .plan-features li{padding:8px 0;border-top:1px solid var(--stone);display:flex;gap:10px;}
+  .plan.featured .plan-features li{border-top-color:rgba(250,249,246,0.15);}
+  .plan-features li::before{content:'—';opacity:0.4;flex-shrink:0;}
+  .plan-cta{
+    text-align:center;padding:13px;border-radius:4px;
+    font-weight:600;font-size:0.9rem;
+    border:1px solid var(--ink);
+  }
+  .plan.featured .plan-cta{background:var(--ember);border-color:var(--ember);}
+  .plan:not(.featured) .plan-cta:hover{background:var(--ink);color:var(--paper);}
+
+  /* ADD-ON CARD */
+  .addon-card{
+    margin-top:24px;
+    border:1px dashed var(--stone);
+    border-radius:8px;
+    padding:24px 28px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:24px;flex-wrap:wrap;
+    background:var(--paper-dim);
+  }
+  .addon-desc{font-size:0.88rem;opacity:0.65;margin-top:6px;max-width:480px;}
+  .addon-price{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:600;}
+  .addon-price span{font-size:0.8rem;font-weight:500;opacity:0.6;}
+  .addon-cta{white-space:nowrap;}
+
+  /* BRIEF FORM */
+  .brief-form{
+    border:1px solid var(--stone);
+    border-radius:10px;
+    padding:36px;
+    background:var(--paper-dim);
+  }
+  .brief-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:20px;
+  }
+  @media(max-width:900px){.brief-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.brief-grid{grid-template-columns:1fr;}}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.span2{grid-column:span 2;}
+  @media(max-width:600px){.field.span2{grid-column:span 1;}}
+  .field label{font-size:0.8rem;font-weight:600;opacity:0.7;}
+  .field input,.field select,.field textarea{
+    border:1px solid var(--stone);
+    border-radius:5px;
+    padding:11px 12px;
+    font-family:'Inter',sans-serif;
+    font-size:0.9rem;
+    color:var(--ink);
+    background:var(--paper);
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:2px solid var(--ember);
+    outline-offset:1px;
+  }
+  .field textarea{resize:vertical;}
+  .submit-brief{
+    margin-top:28px;
+    background:var(--forest);color:var(--paper);
+    border:none;border-radius:5px;
+    padding:15px 32px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;font-size:0.95rem;
+    cursor:pointer;
+    transition:transform .2s;
+  }
+  .submit-brief:hover{transform:translateY(-1px);}
+  .submit-brief:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+  /* WHY US comparison */
+  .compare{
+    display:grid;grid-template-columns:1fr 1fr;gap:2px;
+    background:var(--stone);
+    border-radius:8px;overflow:hidden;
+  }
+  @media(max-width:720px){.compare{grid-template-columns:1fr;}}
+  .compare-col{background:var(--paper);padding:32px;}
+  .compare-col.us{background:var(--ink);color:var(--paper);}
+  .compare-col h3{font-size:1.1rem;margin-bottom:20px;}
+  .compare-col ul{list-style:none;font-size:0.92rem;}
+  .compare-col li{padding:10px 0;border-top:1px solid var(--stone);opacity:0.85;}
+  .compare-col.us li{border-top-color:rgba(250,249,246,0.15);}
+
+  /* FOOTER CTA */
+  .final-cta{
+    background:var(--forest);color:var(--paper);
+    text-align:center;padding:96px 24px;
+  }
+  .final-cta h2{font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:20px;}
+  .final-cta p{opacity:0.85;max-width:480px;margin:0 auto 32px;}
+  .final-cta .btn-primary{background:var(--paper);color:var(--forest);}
+
+  footer{padding:40px 0;font-size:0.82rem;opacity:0.5;text-align:center;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">Launchpad<span>.</span></div>
+    <div class="navlinks">
+      <a href="#pricing">Pricing</a>
+      <a href="#proof">Results</a>
+      <a href="#compare">Why us</a>
+    </div>
+    <a href="#pricing" class="nav-cta">Get started</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <canvas class="phantom-canvas" id="phantom"></canvas>
+  <div class="wrap hero-inner">
+    <div class="eyebrow">Now booking September builds</div>
+    <h1>A website that <em>ranks</em>,<br>not just one that loads.</h1>
+    <p class="lead">Professional websites for South African small businesses — built in days, priced for founders, and backed by proof it actually works.</p>
+    <div class="hero-ctas">
+      <a href="#pricing" class="btn-primary">See pricing →</a>
+      <a href="#proof" class="btn-ghost">See the results</a>
+    </div>
+
+    <div class="proof-card" id="proof">
+      <div class="proof-label">Request a quote</div>
+      <form id="quoteForm" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="291deba8-6d08-465d-bf6a-48536407ecf9">
+        <input type="hidden" name="subject" value="New Launchpad quote request">
+        <input type="text" name="_hp" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="form-row">
+          <input type="text" name="name" placeholder="Your name" required>
+          <input type="tel" name="phone" placeholder="Phone / WhatsApp" required>
+        </div>
+        <input type="email" name="email" placeholder="Email address" required>
+        <select name="package">
+          <option value="">Which package? (optional)</option>
+          <option value="Starter">Starter — R2,500</option>
+          <option value="Business">Business — R4,500</option>
+          <option value="Growth">Growth — R6,000</option>
+          <option value="Pro">Pro — R7,500</option>
+          <option value="Brand Identity">Brand Identity — R1,800</option>
+          <option value="Not sure">Not sure yet</option>
+        </select>
+        <textarea name="message" placeholder="Tell us a bit about your business..." rows="3"></textarea>
+        <button type="submit" class="form-submit">Send request →</button>
+        <div class="form-status" id="formStatus"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Pricing</div>
+      <h2>One price. Nothing hidden.</h2>
+      <p>No hourly billing, no scope creep. Pick a tier, know exactly what you get. Hosting billed directly by xneelo, at cost.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">R2,500 <span>once-off</span></div>
+        <div class="plan-desc">A clean 3-page site to get you online fast.</div>
+        <ul class="plan-features">
+          <li>Domain registration (1 year)</li>
+          <li>3-page static business website</li>
+          <li>Mobile responsive, SSL included</li>
+          <li>Hosting: xneelo Basic (~R99/mo, client-billed)</li>
+        </ul>
+        <a href="#" class="plan-cta">Choose Starter</a>
+      </div>
+      <div class="plan featured">
+        <div class="plan-name">Business</div>
+        <div class="plan-price">R4,500 <span>once-off</span></div>
+        <div class="plan-desc">Multi-page site built to convert visitors into leads.</div>
+        <ul class="plan-features">
+          <li>Domain registration (1 year)</li>
+          <li>Up to 6-page custom website</li>
+          <li>Contact form + WhatsApp integration</li>
+          <li>Professional email — no limit on accounts</li>
+          <li>Hosting: xneelo Standard (~R149/mo, client-billed)</li>
+        </ul>
+        <a href="#" class="plan-cta">Choose Business</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Growth</div>
+        <div class="plan-price">R6,000 <span>once-off</span></div>
+        <div class="plan-desc">For businesses that need to rank, not just exist.</div>
+        <ul class="plan-features">
+          <li>Domain registration (1 year)</li>
+          <li>Up to 8-page custom website</li>
+          <li>Contact form + WhatsApp integration</li>
+          <li>Professional email — no limit on accounts</li>
+          <li>Basic SEO setup (meta tags, sitemap)</li>
+          <li>Hosting: xneelo Advanced (~R279/mo, client-billed)</li>
+        </ul>
+        <a href="#" class="plan-cta">Choose Growth</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">R7,500 <span>once-off</span></div>
+        <div class="plan-desc">Full custom build with priority turnaround.</div>
+        <ul class="plan-features">
+          <li>Domain registration (1 year)</li>
+          <li>Up to 10-page custom website</li>
+          <li>Contact form + WhatsApp integration</li>
+          <li>Professional email — no limit on accounts</li>
+          <li>On-page SEO setup (meta tags, sitemap, Search Console)</li>
+          <li>Priority build turnaround</li>
+          <li>Hosting: xneelo Master (~R439/mo, client-billed)</li>
+        </ul>
+        <a href="#" class="plan-cta">Choose Pro</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Brand Identity</div>
+        <div class="plan-price">R1,800 <span>once-off</span></div>
+        <div class="plan-desc">Standalone branding — works alone or bundled with any website tier.</div>
+        <ul class="plan-features">
+          <li>Logo design (2 concepts)</li>
+          <li>Brand colour palette & fonts</li>
+          <li>Business card + letterhead template</li>
+        </ul>
+        <a href="#brief" class="plan-cta">Choose Brand Identity</a>
+      </div>
+    </div>
+
+    <div class="addon-card">
+      <div class="addon-info">
+        <div class="plan-name">Already picked a website tier?</div>
+        <div class="addon-desc">Bundle the Brand Identity Package with any plan above — logo, colours, fonts, business card + letterhead. Just mention it in the brief below.</div>
+      </div>
+      <div class="addon-price">R1,800 <span>once-off</span></div>
+      <a href="#brief" class="plan-cta addon-cta">Add to build</a>
+    </div>
+  </div>
+</section>
+
+<section id="brief">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Project brief</div>
+      <h2>Tell us who you are and how you want it to look.</h2>
+      <p>This drives the build. Takes about 2 minutes.</p>
+    </div>
+
+    <form id="briefForm" action="https://api.web3forms.com/submit" method="POST" class="brief-form">
+      <input type="hidden" name="access_key" value="291deba8-6d08-465d-bf6a-48536407ecf9">
+      <input type="hidden" name="subject" value="New Launchpad project brief">
+      <input type="text" name="_hp" style="display:none" tabindex="-1" autocomplete="off">
+
+      <div class="brief-grid">
+        <div class="field">
+          <label>Company Name</label>
+          <input type="text" name="company_name" required>
+        </div>
+        <div class="field">
+          <label>Selected Package</label>
+          <select name="package">
+            <option value="">Pick a tier above</option>
+            <option value="Starter">Starter — R2,500</option>
+            <option value="Business">Business — R4,500</option>
+            <option value="Growth">Growth — R6,000</option>
+            <option value="Pro">Pro — R7,500</option>
+            <option value="Brand Identity">Brand Identity — R1,800</option>
+          </select>
+        </div>
+        <div class="field" style="justify-content:flex-end">
+          <label style="display:flex; align-items:center; gap:8px; font-weight:600; opacity:0.7">
+            <input type="checkbox" name="add_brand_identity" value="Yes" style="width:auto">
+            Add Brand Identity Package (+R1,800)
+          </label>
+        </div>
+
+        <div class="field">
+          <label>Contact Name</label>
+          <input type="text" name="contact_name" required>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="field">
+          <label>Cellphone (+27...)</label>
+          <input type="tel" name="phone" placeholder="+27821234567">
+        </div>
+        <div class="field">
+          <label>Choose a tracking username</label>
+          <input type="text" name="tracking_username" placeholder="e.g. rico-motors" minlength="3" required>
+        </div>
+
+        <div class="field span2">
+          <label>Industry / What does the business do?</label>
+          <textarea name="industry" rows="3" placeholder="e.g. Equestrian tack shop, IT consulting, accounting firm..."></textarea>
+        </div>
+        <div class="field span2">
+          <label>Target Audience</label>
+          <textarea name="target_audience" rows="3" placeholder="Who is this website for?"></textarea>
+        </div>
+
+        <div class="field">
+          <label>UI / UX Style</label>
+          <select name="ui_style">
+            <option value="Minimal & clean">Minimal &amp; clean</option>
+            <option value="Bold & modern">Bold &amp; modern</option>
+            <option value="Corporate / professional">Corporate / professional</option>
+            <option value="Playful / friendly">Playful / friendly</option>
+            <option value="Dark / techy (Cipher-style)">Dark / techy (Cipher-style)</option>
+            <option value="Luxury / premium">Luxury / premium</option>
+            <option value="Other">Other (describe below)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Theme / Colour Preference</label>
+          <input type="text" name="theme_colour" placeholder="e.g. teal & black, navy & gold, brand colours">
+        </div>
+        <div class="field">
+          <label>Reference Sites (optional)</label>
+          <input type="text" name="reference_sites" placeholder="Links to sites you like">
+        </div>
+
+        <div class="field span2">
+          <label>Pages Needed</label>
+          <textarea name="pages_needed" rows="3" placeholder="e.g. Home, About, Services, Contact, Shop..."></textarea>
+        </div>
+        <div class="field span2">
+          <label>Features Needed</label>
+          <textarea name="features_needed" rows="3" placeholder="e.g. Contact form, WhatsApp button, online payments, booking system, blog..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Do you have a logo already?</label>
+          <select name="has_logo">
+            <option value="No, need one designed">No, need one designed</option>
+            <option value="Yes, have final logo">Yes, have final logo</option>
+            <option value="Have a rough idea">Have a rough idea</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Preferred Domain Name(s)</label>
+          <input type="text" name="domain_preference" placeholder="e.g. yourcompany.co.za">
+        </div>
+        <div class="field">
+          <label>Additional Notes</label>
+          <input type="text" name="additional_notes" placeholder="Anything else we should know">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-brief">Submit Brief</button>
+      <div class="form-status" id="briefStatus"></div>
+    </form>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Why us</div>
+      <h2>Most agencies sell you a website.<br>We build you a result.</h2>
+    </div>
+    <div class="compare">
+      <div class="compare-col">
+        <h3>Typical web agency</h3>
+        <ul>
+          <li>Vague "custom quote" pricing</li>
+          <li>4–8 week timelines</li>
+          <li>SEO sold as a separate add-on</li>
+          <li>Templates dressed up as custom work</li>
+        </ul>
+      </div>
+      <div class="compare-col us">
+        <h3>Launchpad</h3>
+        <ul>
+          <li>Fixed, published pricing — no surprises</li>
+          <li>3–7 day turnaround, most tiers</li>
+          <li>Local SEO built into every site</li>
+          <li>Real, hand-built sites — proof included</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="final-cta">
+  <div class="wrap">
+    <h2>Let's get you online — properly.</h2>
+    <p>Fill in the form above and we'll send you a proper quote — no calls, no pressure.</p>
+    <a href="#proof" class="btn-primary">Get my quote →</a>
+  </div>
+</div>
+
+<footer>
+  © 2026 Launchpad Studio · Pretoria, South Africa
+</footer>
+
+<script>
+const LAUNCHPAD_INGEST_URL = "https://admin.launchpad-studio.co.za/api/ingest-brief";
+
+// Web3Forms quote form submission
+const quoteForm = document.getElementById('quoteForm');
+const formStatus = document.getElementById('formStatus');
+if(quoteForm){
+  quoteForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const btn = quoteForm.querySelector('.form-submit');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    formStatus.textContent = '';
+    formStatus.className = 'form-status';
+
+    const fd = new FormData(quoteForm);
+    if (fd.get('_hp')) {
+      // Bot filled the honeypot - pretend success, send nothing anywhere.
+      formStatus.textContent = "Thanks! We'll be in touch shortly.";
+      formStatus.classList.add('success');
+      quoteForm.reset();
+      btn.disabled = false;
+      btn.textContent = 'Send request →';
+      return;
+    }
+
+    try{
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: fd
+      });
+      const result = await res.json();
+      if(result.success){
+        formStatus.textContent = "Thanks! We'll be in touch shortly.";
+        formStatus.classList.add('success');
+
+        // Push the lead into the Launchpad admin panel too - not just email.
+        try {
+          const plain = {};
+          fd.forEach((v, k) => { plain[k] = v; });
+          await fetch(LAUNCHPAD_INGEST_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              company_name: '',
+              contact_name: plain.name || '',
+              contact_email: plain.email || '',
+              contact_phone: plain.phone || '',
+              selected_package: plain.package || '',
+              ...plain,
+            }),
+          });
+        } catch (panelErr) {
+          console.error('Failed to push quote request to Launchpad panel:', panelErr);
+        }
+
+        quoteForm.reset();
+      } else {
+        formStatus.textContent = 'Something went wrong. Please try again.';
+        formStatus.classList.add('error');
+      }
+    } catch(err){
+      formStatus.textContent = 'Network error. Please try again.';
+      formStatus.classList.add('error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send request →';
+    }
+  });
+}
+
+// Web3Forms project brief submission
+const briefForm = document.getElementById('briefForm');
+const briefStatus = document.getElementById('briefStatus');
+if(briefForm){
+  briefForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const btn = briefForm.querySelector('.submit-brief');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    briefStatus.textContent = '';
+    briefStatus.className = 'form-status';
+
+    const fd = new FormData(briefForm);
+    if (fd.get('_hp')) {
+      briefStatus.textContent = "Brief received! We'll be in touch shortly.";
+      briefStatus.classList.add('success');
+      briefForm.reset();
+      btn.disabled = false;
+      btn.textContent = originalText;
+      return;
+    }
+
+    try{
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: fd
+      });
+      const result = await res.json();
+      if(result.success){
+        const plain = {};
+        fd.forEach((v, k) => { plain[k] = v; });
+        const trackingUsername = plain.tracking_username || '';
+
+        briefStatus.textContent = trackingUsername
+          ? `Brief received! Track your order anytime at https://track.launchpad-studio.co.za using username "${trackingUsername}" + your email.`
+          : "Brief received! We'll be in touch shortly.";
+        briefStatus.classList.add('success');
+
+        // Push straight into the Launchpad admin panel - this IS the order
+        // (EFT-based, no payment gateway in the loop).
+        try {
+          await fetch(LAUNCHPAD_INGEST_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              company_name: plain.company_name || '',
+              contact_name: plain.contact_name || '',
+              contact_email: plain.email || '',
+              contact_phone: plain.phone || '',
+              selected_package: plain.package || '',
+              tracking_username: trackingUsername,
+              ...plain,
+            }),
+          });
+        } catch (panelErr) {
+          console.error('Failed to push brief to Launchpad panel:', panelErr);
+        }
+
+        briefForm.reset();
+      } else {
+        briefStatus.textContent = 'Something went wrong. Please try again.';
+        briefStatus.classList.add('error');
+      }
+    } catch(err){
+      briefStatus.textContent = 'Network error. Please try again.';
+      briefStatus.classList.add('error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  });
+}
+
+// Phantom smoke effect — ember/navy tone variant
+const canvas = document.getElementById('phantom');
+const ctx = canvas.getContext('2d');
+let w, h;
+
+function resize(){
+  w = canvas.width = canvas.offsetWidth;
+  h = canvas.height = canvas.offsetHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+const particles = [];
+const COUNT = 45;
+const colors = [
+  'rgba(232,84,46,ALPHA)',   // ember
+  'rgba(47,82,51,ALPHA)',    // forest
+  'rgba(250,249,246,ALPHA)'  // pale
+];
+
+function makeParticle(){
+  return {
+    x: Math.random()*w,
+    y: h + 50 + Math.random()*200,
+    r: 60 + Math.random()*160,
+    speed: 0.15 + Math.random()*0.35,
+    drift: (Math.random()-0.5)*0.3,
+    alpha: 0.02 + Math.random()*0.05,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    life: 0,
+    maxLife: 400 + Math.random()*400
+  };
+}
+for(let i=0;i<COUNT;i++){
+  const p = makeParticle();
+  p.y = Math.random()*h;
+  p.life = Math.random()*p.maxLife;
+  particles.push(p);
+}
+
+let reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  ctx.globalCompositeOperation = 'lighter';
+  for(const p of particles){
+    if(!reduceMotion){
+      p.y -= p.speed;
+      p.x += p.drift;
+      p.life++;
+      if(p.y < -p.r || p.life > p.maxLife){
+        Object.assign(p, makeParticle());
+      }
+    }
+    const fadeIn = Math.min(p.life/60, 1);
+    const fadeOut = Math.min((p.maxLife - p.life)/80, 1);
+    const a = p.alpha * Math.max(0, Math.min(fadeIn, fadeOut));
+    const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+    grad.addColorStop(0, p.color.replace('ALPHA', a));
+    grad.addColorStop(1, p.color.replace('ALPHA', 0));
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
