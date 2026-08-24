@@ -102,21 +102,7 @@
     display:inline-block;
   }
 
-  /* PROOF CARD — search result mock */
-  .proof-card{
-    background:var(--paper);
-    color:var(--ink);
-    border-radius:8px;
-    padding:24px 28px;
-    max-width:600px;
-    box-shadow:0 24px 64px rgba(0,0,0,0.35);
-  }
-  .proof-label{
-    font-size:0.72rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
-    color:var(--forest);margin-bottom:14px;
-    display:flex;align-items:center;gap:8px;
-  }
-  .proof-label::before{content:'✓';background:var(--forest);color:var(--paper);width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;}
+  /* PROOF CARD styles retained for potential future use — search-result mock unused, safe to ignore */
   .search-result{
     border:1px solid var(--stone);
     border-radius:6px;
@@ -136,35 +122,7 @@
   .sr-desc{font-size:0.82rem;opacity:0.7;}
   .proof-footnote{font-size:0.78rem;opacity:0.6;margin-top:12px;}
 
-  /* QUOTE FORM */
-  #quoteForm{display:flex;flex-direction:column;gap:10px;}
-  .form-row{display:flex;gap:10px;}
-  #quoteForm input,#quoteForm select,#quoteForm textarea{
-    width:100%;
-    border:1px solid var(--stone);
-    border-radius:5px;
-    padding:11px 12px;
-    font-family:'Inter',sans-serif;
-    font-size:0.9rem;
-    color:var(--ink);
-    background:var(--paper);
-  }
-  #quoteForm input:focus,#quoteForm select:focus,#quoteForm textarea:focus{
-    outline:2px solid var(--ember);
-    outline-offset:1px;
-  }
-  #quoteForm textarea{resize:vertical;}
-  .form-submit{
-    background:var(--ember);color:var(--paper);
-    border:none;border-radius:5px;
-    padding:13px;
-    font-family:'Inter',sans-serif;
-    font-weight:600;font-size:0.92rem;
-    cursor:pointer;
-    transition:transform .2s;
-  }
-  .form-submit:hover{transform:translateY(-1px);}
-  .form-submit:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+  /* QUOTE FORM removed - brief form below is the sole lead capture now */
   .form-status{font-size:0.85rem;text-align:center;min-height:1.2em;}
   .form-status.success{color:var(--forest);font-weight:600;}
   .form-status.error{color:var(--ember);font-weight:600;}
@@ -272,6 +230,15 @@
   .submit-brief:hover{transform:translateY(-1px);}
   .submit-brief:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
 
+  #support{padding:80px 0;}
+  #support .wrap{max-width:600px;}
+  #support h2{font-size:clamp(1.6rem,3.5vw,2.2rem);margin-bottom:10px;text-align:center;}
+  #support .support-sub{opacity:0.7;text-align:center;margin-bottom:32px;}
+  .direct-email{
+    display:block;text-align:center;margin-top:20px;font-size:0.9rem;opacity:0.75;
+  }
+  .direct-email a{color:var(--forest);font-weight:600;}
+
   /* WHY US comparison */
   .compare{
     display:grid;grid-template-columns:1fr 1fr;gap:2px;
@@ -295,7 +262,6 @@
   .final-cta p{opacity:0.85;max-width:480px;margin:0 auto 32px;}
   .final-cta .btn-primary{background:var(--paper);color:var(--forest);}
 
-  footer{padding:40px 0;font-size:0.82rem;opacity:0.5;text-align:center;}
 </style>
 </head>
 <body>
@@ -305,8 +271,8 @@
     <div class="logo">Launchpad<span>.</span></div>
     <div class="navlinks">
       <a href="#pricing">Pricing</a>
-      <a href="#proof">Results</a>
       <a href="#compare">Why us</a>
+      <a href="#support">Support</a>
     </div>
     <a href="#pricing" class="nav-cta">Get started</a>
   </div>
@@ -320,33 +286,7 @@
     <p class="lead">Professional websites for South African small businesses — built in days, priced for founders, and backed by proof it actually works.</p>
     <div class="hero-ctas">
       <a href="#pricing" class="btn-primary">See pricing →</a>
-      <a href="#proof" class="btn-ghost">See the results</a>
-    </div>
-
-    <div class="proof-card" id="proof">
-      <div class="proof-label">Request a quote</div>
-      <form id="quoteForm" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="291deba8-6d08-465d-bf6a-48536407ecf9">
-        <input type="hidden" name="subject" value="New Launchpad quote request">
-        <input type="text" name="_hp" style="display:none" tabindex="-1" autocomplete="off">
-        <div class="form-row">
-          <input type="text" name="name" placeholder="Your name" required>
-          <input type="tel" name="phone" placeholder="Phone / WhatsApp" required>
-        </div>
-        <input type="email" name="email" placeholder="Email address" required>
-        <select name="package">
-          <option value="">Which package? (optional)</option>
-          <option value="Starter">Starter — R2,500</option>
-          <option value="Business">Business — R4,500</option>
-          <option value="Growth">Growth — R6,000</option>
-          <option value="Pro">Pro — R7,500</option>
-          <option value="Brand Identity">Brand Identity — R1,800</option>
-          <option value="Not sure">Not sure yet</option>
-        </select>
-        <textarea name="message" placeholder="Tell us a bit about your business..." rows="3"></textarea>
-        <button type="submit" class="form-submit">Send request →</button>
-        <div class="form-status" id="formStatus"></div>
-      </form>
+      <a href="#brief" class="btn-ghost">Get a quote</a>
     </div>
   </div>
 </section>
@@ -585,86 +525,48 @@
 <div class="final-cta">
   <div class="wrap">
     <h2>Let's get you online — properly.</h2>
-    <p>Fill in the form above and we'll send you a proper quote — no calls, no pressure.</p>
-    <a href="#proof" class="btn-primary">Get my quote →</a>
+    <p>Fill in the brief below and we'll send you a proper quote — no calls, no pressure.</p>
+    <a href="#brief" class="btn-primary">Get my quote →</a>
   </div>
 </div>
 
-<footer>
-  © 2026 Launchpad Studio · Pretoria, South Africa
-</footer>
+<section id="support">
+  <div class="wrap">
+    <h2>Have a question?</h2>
+    <p class="support-sub">Not ready for a full brief yet? Ask us anything and we'll get back to you.</p>
+
+    <form id="supportForm" action="https://api.web3forms.com/submit" method="POST" class="brief-form">
+      <input type="hidden" name="access_key" value="291deba8-6d08-465d-bf6a-48536407ecf9">
+      <input type="hidden" name="subject" value="New Launchpad enquiry">
+      <input type="text" name="_hp" style="display:none" tabindex="-1" autocomplete="off">
+
+      <div class="brief-grid">
+        <div class="field">
+          <label>Your Name</label>
+          <input type="text" name="name" required>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="field span2">
+          <label>Message</label>
+          <textarea name="message" rows="4" required placeholder="What would you like to know?"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-brief">Send message</button>
+      <div class="form-status" id="supportStatus"></div>
+    </form>
+
+    <div class="direct-email">
+      Prefer email? Reach us directly at <a href="mailto:enquiries@launchpad-studio.co.za">enquiries@launchpad-studio.co.za</a>
+    </div>
+  </div>
+</section>
 
 <script>
 const LAUNCHPAD_INGEST_URL = "https://admin.launchpad-studio.co.za/api/ingest-brief";
-
-// Web3Forms quote form submission
-const quoteForm = document.getElementById('quoteForm');
-const formStatus = document.getElementById('formStatus');
-if(quoteForm){
-  quoteForm.addEventListener('submit', async function(e){
-    e.preventDefault();
-    const btn = quoteForm.querySelector('.form-submit');
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-    formStatus.textContent = '';
-    formStatus.className = 'form-status';
-
-    const fd = new FormData(quoteForm);
-    if (fd.get('_hp')) {
-      // Bot filled the honeypot - pretend success, send nothing anywhere.
-      formStatus.textContent = "Thanks! We'll be in touch shortly.";
-      formStatus.classList.add('success');
-      quoteForm.reset();
-      btn.disabled = false;
-      btn.textContent = 'Send request →';
-      return;
-    }
-
-    try{
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: fd
-      });
-      const result = await res.json();
-      if(result.success){
-        formStatus.textContent = "Thanks! We'll be in touch shortly.";
-        formStatus.classList.add('success');
-
-        // Push the lead into the Launchpad admin panel too - not just email.
-        try {
-          const plain = {};
-          fd.forEach((v, k) => { plain[k] = v; });
-          await fetch(LAUNCHPAD_INGEST_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              company_name: '',
-              contact_name: plain.name || '',
-              contact_email: plain.email || '',
-              contact_phone: plain.phone || '',
-              selected_package: plain.package || '',
-              ...plain,
-            }),
-          });
-        } catch (panelErr) {
-          console.error('Failed to push quote request to Launchpad panel:', panelErr);
-        }
-
-        quoteForm.reset();
-      } else {
-        formStatus.textContent = 'Something went wrong. Please try again.';
-        formStatus.classList.add('error');
-      }
-    } catch(err){
-      formStatus.textContent = 'Network error. Please try again.';
-      formStatus.classList.add('error');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Send request →';
-    }
-  });
-}
 
 // Web3Forms project brief submission
 const briefForm = document.getElementById('briefForm');
@@ -734,6 +636,54 @@ if(briefForm){
     } catch(err){
       briefStatus.textContent = 'Network error. Please try again.';
       briefStatus.classList.add('error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  });
+}
+
+// Web3Forms support request submission
+const supportForm = document.getElementById('supportForm');
+const supportStatus = document.getElementById('supportStatus');
+if(supportForm){
+  supportForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const btn = supportForm.querySelector('.submit-brief');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    supportStatus.textContent = '';
+    supportStatus.className = 'form-status';
+
+    const fd = new FormData(supportForm);
+    if (fd.get('_hp')) {
+      supportStatus.textContent = "Message sent! We'll get back to you shortly.";
+      supportStatus.classList.add('success');
+      supportForm.reset();
+      btn.disabled = false;
+      btn.textContent = originalText;
+      return;
+    }
+
+    try{
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: fd
+      });
+      const result = await res.json();
+      if(result.success){
+        supportStatus.textContent = "Message sent! We'll get back to you shortly.";
+        supportStatus.classList.add('success');
+        supportForm.reset();
+      } else {
+        supportStatus.textContent = 'Something went wrong. Please try again.';
+        supportStatus.classList.add('error');
+      }
+    } catch(err){
+      supportStatus.textContent = 'Network error. Please try again.';
+      supportStatus.classList.add('error');
     } finally {
       btn.disabled = false;
       btn.textContent = originalText;
