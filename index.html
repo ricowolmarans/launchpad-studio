@@ -613,7 +613,14 @@
 </section>
 
 <script>
-const LAUNCHPAD_INGEST_URL = "https://admin.launchpad-studio.co.za/api/ingest-brief";
+// UPDATE THIS after deploying launchpad-intake-worker — use whatever route/
+// subdomain you attach to it in Cloudflare (e.g. https://ingest.launchpad-studio.co.za,
+// or a workers.dev URL if you don't attach a custom domain).
+// The old URL here (admin.launchpad-studio.co.za/api/ingest-brief) pointed at
+// a route that no longer exists in the admin project — that 404 was silently
+// swallowed by the catch block below, which is why orders weren't arriving.
+const LAUNCHPAD_INGEST_URL = "https://ingest.launchpad-studio.co.za/api/ingest-brief";
+const LAUNCHPAD_ENQUIRY_URL = "https://ingest.launchpad-studio.co.za/api/enquiry";
 
 // Web3Forms project brief submission
 const briefForm = document.getElementById('briefForm');
@@ -658,21 +665,39 @@ if(briefForm){
         // Push straight into the Launchpad admin panel - this IS the order
         // (EFT-based, no payment gateway in the loop).
         try {
-          await fetch(LAUNCHPAD_INGEST_URL, {
+          const ingestRes = await fetch(LAUNCHPAD_INGEST_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               company_name: plain.company_name || '',
               contact_name: plain.contact_name || '',
-              contact_email: plain.email || '',
-              contact_phone: plain.phone || '',
-              selected_package: plain.package || '',
+              email: plain.email || '',
+              phone: plain.phone || '',
+              package: plain.package || '',
+              add_brand_identity: plain.add_brand_identity || '',
               tracking_username: trackingUsername,
-              ...plain,
+              industry: plain.industry || '',
+              target_audience: plain.target_audience || '',
+              ui_style: plain.ui_style || '',
+              theme_colour: plain.theme_colour || '',
+              reference_sites: plain.reference_sites || '',
+              pages_needed: plain.pages_needed || '',
+              features_needed: plain.features_needed || '',
+              has_logo: plain.has_logo || '',
+              domain_preference: plain.domain_preference || '',
+              additional_notes: plain.additional_notes || '',
             }),
           });
+          if (!ingestRes.ok) {
+            // Web3Forms already has the brief (you'll get that email either way),
+            // but it did NOT reach Turso/the admin panel — this needs a manual
+            // follow-up so the order isn't lost entirely.
+            console.error('Launchpad panel ingest failed:', ingestRes.status, await ingestRes.text().catch(() => ''));
+            briefStatus.textContent += ' (Note: there was an issue syncing to our order system — we still received your email brief and will follow up.)';
+          }
         } catch (panelErr) {
           console.error('Failed to push brief to Launchpad panel:', panelErr);
+          briefStatus.textContent += ' (Note: there was an issue syncing to our order system — we still received your email brief and will follow up.)';
         }
 
         briefForm.reset();
@@ -723,6 +748,26 @@ if(supportForm){
       if(result.success){
         supportStatus.textContent = "Message sent! We'll get back to you shortly.";
         supportStatus.classList.add('success');
+
+        // Also push into the Launchpad panel's enquiries list, alongside the
+        // Web3Forms email — separate from orders entirely.
+        try {
+          const ingestRes = await fetch(LAUNCHPAD_ENQUIRY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: fd.get('name') || '',
+              email: fd.get('email') || '',
+              message: fd.get('message') || '',
+            }),
+          });
+          if (!ingestRes.ok) {
+            console.error('Enquiry panel sync failed:', ingestRes.status, await ingestRes.text().catch(() => ''));
+          }
+        } catch (panelErr) {
+          console.error('Failed to push enquiry to Launchpad panel:', panelErr);
+        }
+
         supportForm.reset();
       } else {
         supportStatus.textContent = 'Something went wrong. Please try again.';
