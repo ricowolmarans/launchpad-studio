@@ -336,82 +336,11 @@
       <h2>Website design pricing — one price, nothing hidden.</h2>
       <p>No hourly billing, no scope creep. Pick a tier, know exactly what you get. Hosting billed directly by xneelo, at cost.</p>
     </div>
-    <div class="pricing-grid">
-      <div class="plan">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price">R2,500 <span>once-off</span></div>
-        <div class="plan-desc">A clean 3-page site to get you online fast.</div>
-        <ul class="plan-features">
-          <li>Domain registration (1 year)</li>
-          <li>3-page static business website</li>
-          <li>Mobile responsive, SSL included</li>
-          <li>Hosting: xneelo Basic (~R99/mo, client-billed)</li>
-        </ul>
-        <a href="#" class="plan-cta">Choose Starter</a>
-      </div>
-      <div class="plan featured">
-        <div class="plan-name">Business</div>
-        <div class="plan-price">R4,500 <span>once-off</span></div>
-        <div class="plan-desc">Multi-page site built to convert visitors into leads.</div>
-        <ul class="plan-features">
-          <li>Domain registration (1 year)</li>
-          <li>Up to 6-page custom website</li>
-          <li>Contact form + WhatsApp integration</li>
-          <li>Professional email — no limit on accounts</li>
-          <li>Hosting: xneelo Standard (~R149/mo, client-billed)</li>
-        </ul>
-        <a href="#" class="plan-cta">Choose Business</a>
-      </div>
-      <div class="plan">
-        <div class="plan-name">Growth</div>
-        <div class="plan-price">R6,000 <span>once-off</span></div>
-        <div class="plan-desc">For businesses that need to rank, not just exist.</div>
-        <ul class="plan-features">
-          <li>Domain registration (1 year)</li>
-          <li>Up to 8-page custom website</li>
-          <li>Contact form + WhatsApp integration</li>
-          <li>Professional email — no limit on accounts</li>
-          <li>Basic SEO setup (meta tags, sitemap)</li>
-          <li>Hosting: xneelo Advanced (~R279/mo, client-billed)</li>
-        </ul>
-        <a href="#" class="plan-cta">Choose Growth</a>
-      </div>
-      <div class="plan">
-        <div class="plan-name">Pro</div>
-        <div class="plan-price">R7,500 <span>once-off</span></div>
-        <div class="plan-desc">Full custom build with priority turnaround.</div>
-        <ul class="plan-features">
-          <li>Domain registration (1 year)</li>
-          <li>Up to 10-page custom website</li>
-          <li>Contact form + WhatsApp integration</li>
-          <li>Professional email — no limit on accounts</li>
-          <li>On-page SEO setup (meta tags, sitemap, Search Console)</li>
-          <li>Priority build turnaround</li>
-          <li>Hosting: xneelo Master (~R439/mo, client-billed)</li>
-        </ul>
-        <a href="#" class="plan-cta">Choose Pro</a>
-      </div>
-      <div class="plan">
-        <div class="plan-name">Brand Identity</div>
-        <div class="plan-price">R1,800 <span>once-off</span></div>
-        <div class="plan-desc">Standalone branding — works alone or bundled with any website tier.</div>
-        <ul class="plan-features">
-          <li>Logo design (2 concepts)</li>
-          <li>Brand colour palette & fonts</li>
-          <li>Business card + letterhead template</li>
-        </ul>
-        <a href="#brief" class="plan-cta">Choose Brand Identity</a>
-      </div>
+    <div class="pricing-grid" id="pricing-grid">
+      <div class="plan"><div class="plan-desc">Loading plans…</div></div>
     </div>
 
-    <div class="addon-card">
-      <div class="addon-info">
-        <div class="plan-name">Already picked a website tier?</div>
-        <div class="addon-desc">Bundle the Brand Identity Package with any plan above — logo, colours, fonts, business card + letterhead. Just mention it in the brief below.</div>
-      </div>
-      <div class="addon-price">R1,800 <span>once-off</span></div>
-      <a href="#brief" class="plan-cta addon-cta">Add to build</a>
-    </div>
+    <div id="addon-card-slot"></div>
   </div>
 </section>
 
@@ -435,13 +364,8 @@
         </div>
         <div class="field">
           <label>Selected Package</label>
-          <select name="package">
+          <select name="package" id="package-select">
             <option value="">Pick a tier above</option>
-            <option value="Starter">Starter — R2,500</option>
-            <option value="Business">Business — R4,500</option>
-            <option value="Growth">Growth — R6,000</option>
-            <option value="Pro">Pro — R7,500</option>
-            <option value="Brand Identity">Brand Identity — R1,800</option>
           </select>
         </div>
         <div class="field" style="justify-content:flex-end">
@@ -621,6 +545,59 @@
 // swallowed by the catch block below, which is why orders weren't arriving.
 const LAUNCHPAD_INGEST_URL = "https://ingest.launchpad-studio.co.za/api/ingest-brief";
 const LAUNCHPAD_ENQUIRY_URL = "https://ingest.launchpad-studio.co.za/api/enquiry";
+const LAUNCHPAD_PLANS_URL = "https://ingest.launchpad-studio.co.za/plans";
+
+// Pricing section + package <select> are populated from the admin-managed
+// plans table so Rico can edit tiers without touching this file.
+async function loadPlans() {
+  const grid = document.getElementById('pricing-grid');
+  const select = document.getElementById('package-select');
+  const addonSlot = document.getElementById('addon-card-slot');
+  try {
+    const res = await fetch(LAUNCHPAD_PLANS_URL);
+    if (!res.ok) throw new Error('bad response');
+    const plans = await res.json();
+
+    const tiers = plans.filter(p => !p.is_addon);
+    const addons = plans.filter(p => p.is_addon);
+
+    grid.innerHTML = tiers.map((p, i) => `
+      <div class="plan${i === 1 ? ' featured' : ''}">
+        <div class="plan-name">${escapePlanHtml(p.name)}</div>
+        <div class="plan-price">R${p.price_rand.toLocaleString()} <span>once-off</span></div>
+        <div class="plan-desc">${escapePlanHtml(p.description || '')}</div>
+        <ul class="plan-features">
+          ${p.features.map(f => `<li>${escapePlanHtml(f)}</li>`).join('')}
+        </ul>
+        <a href="#brief" class="plan-cta">Choose ${escapePlanHtml(p.name)}</a>
+      </div>
+    `).join('') || '<div class="plan"><div class="plan-desc">No plans available right now.</div></div>';
+
+    select.innerHTML = '<option value="">Pick a tier above</option>' +
+      plans.map(p => `<option value="${escapePlanHtml(p.name)}">${escapePlanHtml(p.name)} — R${p.price_rand.toLocaleString()}</option>`).join('');
+
+    addonSlot.innerHTML = addons.map(a => `
+      <div class="addon-card">
+        <div class="addon-info">
+          <div class="plan-name">${escapePlanHtml(a.name)}</div>
+          <div class="addon-desc">${escapePlanHtml(a.description || '')}</div>
+        </div>
+        <div class="addon-price">R${a.price_rand.toLocaleString()} <span>once-off</span></div>
+        <a href="#brief" class="plan-cta addon-cta">Add to build</a>
+      </div>
+    `).join('');
+  } catch (err) {
+    grid.innerHTML = '<div class="plan"><div class="plan-desc">Couldn\'t load pricing — refresh, or see options in the brief form below.</div></div>';
+  }
+}
+
+function escapePlanHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+loadPlans();
 
 // Web3Forms project brief submission
 const briefForm = document.getElementById('briefForm');
